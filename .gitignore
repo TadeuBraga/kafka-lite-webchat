@@ -30,9 +30,7 @@ target/
 ### Vuejs ###
 # Recommended template: Node.gitignore
 
-node_modules/
-dist/
-npm-debug.log
-yarn-error.log
-
-# End of https://www.gitignore.io/api/java,vuejs,java-web
+litechat/node_modules/
+litechat/dist/
+litechat/npm-debug.log
+litechat/yarn-error.log
