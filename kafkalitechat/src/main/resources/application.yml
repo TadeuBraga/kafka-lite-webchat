@@ -1,0 +1,15 @@
+server:
+   port: 9000
+spring:
+   mvc:
+      dispatch-options-request: true
+   kafka:
+     consumer:
+        bootstrap-servers: localhost:9092
+        auto-offset-reset: earliest
+        key-deserializer: br.com.tadeu.kafkalitechat.serializing.KafkaJsonDeserializer
+        value-deserializer: br.com.tadeu.kafkalitechat.serializing.KafkaJsonDeserializer
+     producer:
+        bootstrap-servers: localhost:9092
+        key-serializer: br.com.tadeu.kafkalitechat.serializing.KafkaJsonSerializer
+        value-serializer: br.com.tadeu.kafkalitechat.serializing.KafkaJsonSerializer
