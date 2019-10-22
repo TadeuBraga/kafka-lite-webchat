@@ -3,12 +3,14 @@
     <b-card-sub-title>
       <h5 :style="{color: getUserColor(message.username)}">{{message.username}}</h5>
     </b-card-sub-title>
-    <b-card-text v-once align="left">
-      <div class="bg-light ml-2" v-text="message.content" />
+    <b-card-text align="left">
+      <div class="bg-light ml-2">
+        <p class="mb-0 mt-0" v-text="content" v-for="content in message.contents" :key="content"></p>
+      </div>
     </b-card-text>
 
-    <b-card-text v-once align="right">
-      <small>{{ message.time | formatDate }}</small>
+    <b-card-text align="right">
+      <small>{{ message.times[message.times.length-1] | formatDate }}</small>
     </b-card-text>
   </b-card>
 </template>

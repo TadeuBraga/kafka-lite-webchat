@@ -7,5 +7,8 @@ export default {
     },
     addMessage(state, message) {
         state.messages.push(message)
+    },
+    replaceMessage(state, {message, index}) {
+        state.messages[index] = message;
     }
 }

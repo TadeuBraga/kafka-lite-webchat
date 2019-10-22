@@ -1,11 +1,7 @@
 <template>
   <div class="home">
     <b-jumbotron class="container p-3">
-      <MessageCard
-        :message="message"
-        v-for="message in messages"
-        :key="message.content+message.time"
-      />
+      <MessageCard :message="message" v-for="(message, index) in messages" :key="index" />
     </b-jumbotron>
     <b-col sm="12">
       <MessageForm :sendMessage="sendMessage" />
@@ -31,7 +27,7 @@ export default {
     this.initializeSocket();
   },
   methods: {
-    ...mapActions(["addMessage"]),
+    ...mapActions(["addMessage", "replaceMessage"]),
     async initializeSocket() {
       const url = "http://localhost:9000/socket";
       const ws = new SockJS(url);
@@ -40,27 +36,29 @@ export default {
         client.subscribe("/chat", msg => {
           let message = JSON.parse(msg.body);
           message.time = new Date(message.time);
-          if(this.isLastMessageFromTheSameUser(this.username)) {
-            const index = this.messages.length-1;
+          message.contents = []; //vue can't detect changes on object if the property doesn't exist
+          message.times = [];
+          if (this.isLastMessageFromTheSameUser(message.username)) {
+            const index = this.messages.length - 1;
             let previousMessage = Object.assign({}, this.messages[index]);
-            if(previousMessage.contents) {
-              previousMessage.contents.push(message.content);
-              previousMessage.times.push(message.time);
-            } else {
-              previousMessage.merged = true;
-              previousMessage.contents = [previousMessage.content, message.content];
-              previousMessage.times = [previousMessage.time, message.time];
-            }
-            //replaceMessage index
+            previousMessage.contents.push(message.content);
+            previousMessage.times.push(message.time);
+            this.replaceMessage({ message: previousMessage, index });
           } else {
+            message.contents.push(message.content);
+            message.times.push(message.time);
             this.addMessage(message);
           }
-          
         });
       });
     },
     isLastMessageFromTheSameUser(username) {
-      return this.messages[this.messages.length-1].username == username;
+      if (this.messages.length > 0) {
+        console.log(this.messages[this.messages.length - 1].username);
+        console.log(username);
+        return this.messages[this.messages.length - 1].username == username;
+      }
+      return false;
     },
     async sendMessage(message) {
       axios("http://localhost:9000/message/", {
@@ -77,6 +75,11 @@ export default {
   },
   computed: {
     ...mapState(["messages"])
+  },
+  watch: {
+    message: () => {
+      this.$forceUpdate();
+    }
   }
 };
 </script>

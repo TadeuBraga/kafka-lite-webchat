@@ -7,5 +7,8 @@ export default {
     },
     addMessage: ({ commit }, payload) => {
         commit('addMessage', payload);
+    },
+    replaceMessage: ({ commit }, payload) => {
+        commit('replaceMessage', payload);
     }
 }
